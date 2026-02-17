@@ -50,7 +50,7 @@ if region_selecionado:
 #df_filtrado = df[df['Year'].isin(year_selecionado)]
 st.title('Dashboard de Análise de Vendas de Carros')
 st.subheader('Visão estratégica das vendas por período, marca, modelo e região.')
-st.markdown('---')
+st.divider()
 
 if not df_filtrado.empty:
     faturamento_total = df_filtrado['Price ($)'].sum()
@@ -79,24 +79,24 @@ col4.metric(label='Company líder',
 st.markdown('---')
 
 st.subheader('Gráficos')
-tab1, tab2, tab3, tab4 = st.tabs(['VISÃO GERAL',
-                                  'MARCAS',
-                                  'REGIÃO',
-                                  'FINANCEIRO'])
+tab1, tab2, tab3, tab4 = st.tabs([':material/bar_chart_4_bars: VISÃO GERAL',
+                                  ':material/shoppingmode: MARCAS',
+                                  ':material/location_on: REGIÃO',
+                                  ':material/attach_money: FINANCEIRO'])
 colors=['red', 'blue']
 
 if not df_filtrado.empty:
     with tab1:
-        
-            st.write('Nada aqui :(')
-            '''vendas_por_tempo = df_filtrado.groupby(['Car_id', 'Month_Year']).value_counts().reset_index(name='Total')
-            df_pivot_vendas = vendas_por_tempo.pivot(index='Month_Year',
-                                                    columns='Car_id',
-                                                    values='Total')
-            st.line_chart(df_pivot_vendas)'''
+        st.code('''vendas_por_periodo = (df_filtrado.groupby(['Car_id', 'Month_Year']).size().reset_index(name='Total Vendas'))
+        vendas_por_periodo = vendas_por_periodo.sort_values(['Car_id','Month_Year'])
+        df_pivot_vendas = vendas_por_periodo.pivot(index='Car_id',
+                                                   columns='Month_Year',
+                                                   values='Total Vendas')
+        st.line_chart(df_pivot_vendas)''')
     with tab2:
         col_t1, col_t2 = st.columns(2)
         with col_t1:
+            st.subheader("Vendas por Company")
             ranking_companys = df_filtrado['Company'].value_counts().reset_index()
             ranking_companys.columns = ['Company', 'Total']
             st.bar_chart(ranking_companys,
@@ -107,6 +107,7 @@ if not df_filtrado.empty:
                          color='Total')
             
         with col_t2:
+            st.subheader("% Market share")
             fig = go.Figure()
             fig.add_traces(go.Pie(
                 labels=ranking_companys['Company'],
@@ -114,11 +115,23 @@ if not df_filtrado.empty:
             ))
             fig
     
-    st.subheader("Top 10 modelos mais vendidos")
-    df_top_modelos = (df_filtrado.groupby(['Model', 'Company'], as_index=False).agg(Vendas=('Car_id', 'count'),
-                                                                                   Faturamento=('Price ($)', 'sum'),
-                                                                                   Preço_medio=('Price ($)', 'mean'))
-                                                                                   .sort_values('Vendas', ascending=False)).head(10)
-    
-    df_top_modelos['Preço_medio'] = df_top_modelos['Preço_medio'].round(2)
-    st.dataframe(df_top_modelos)
+        st.subheader("Top 10 modelos mais vendidos")
+        df_top_modelos = (df_filtrado.groupby(['Model', 'Company'], as_index=False).agg(Vendas=('Car_id', 'count'),
+                                                                                    Faturamento=('Price ($)', 'sum'),
+                                                                                    Preço_medio=('Price ($)', 'mean'))
+                                                                                    .sort_values('Vendas', ascending=False)).head(10)
+        
+        df_top_modelos['Preço_medio'] = df_top_modelos['Preço_medio'].round(2)
+        st.dataframe(df_top_modelos)
+
+    with tab3:
+        st.subheader("Vendas por região")
+        top_region = df_filtrado['Dealer_Region'].value_counts(ascending=True).reset_index()
+        top_region.columns = ['Region', 'Vendas']
+        fig = go.Figure()
+        fig.add_traces(go.Bar(
+            y=top_region['Region'],
+            x=top_region['Vendas'],
+            orientation='h',
+        ))
+        fig
