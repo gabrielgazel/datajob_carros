@@ -113,3 +113,12 @@ if not df_filtrado.empty:
                 values=ranking_companys['Total']
             ))
             fig
+    
+    st.subheader("Top 10 modelos mais vendidos")
+    df_top_modelos = (df_filtrado.groupby(['Model', 'Company'], as_index=False).agg(Vendas=('Car_id', 'count'),
+                                                                                   Faturamento=('Price ($)', 'sum'),
+                                                                                   Preço_medio=('Price ($)', 'mean'))
+                                                                                   .sort_values('Vendas', ascending=False)).head(10)
+    
+    df_top_modelos['Preço_medio'] = df_top_modelos['Preço_medio'].round(2)
+    st.dataframe(df_top_modelos)
