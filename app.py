@@ -50,7 +50,7 @@ if region_selecionado:
 #df_filtrado = df[df['Year'].isin(year_selecionado)]
 st.title('Dashboard de Análise de Vendas de Carros')
 st.subheader('Visão estratégica das vendas por período, marca, modelo e região.')
-st.divider()
+st.space('medium')
 
 if not df_filtrado.empty:
     faturamento_total = df_filtrado['Price ($)'].sum()
@@ -63,20 +63,24 @@ else:
 col1, col2, col3, col4 = st.columns(4)
 col1.metric(label='Faturamento',
             value=faturamento_total,
-            format='compact')
+            format='compact',
+            border=True)
 
 col2.metric(label='Total de carros vendidos',
             value=volume_total,
-            format='compact')
+            format='compact',
+            border=True)
 
 col3.metric(label='Ticket médio',
             value=ticket_medio,
-            format='compact')
+            format='compact',
+            border=True)
 
 col4.metric(label='Company líder',
-            value=company_leader)
+            value=company_leader,
+            border=True)
 
-st.markdown('---')
+#st.markdown('---')
 
 st.subheader('Gráficos')
 tab1, tab2, tab3, tab4 = st.tabs([':material/bar_chart_4_bars: VISÃO GERAL',
@@ -87,12 +91,7 @@ colors=['red', 'blue']
 
 if not df_filtrado.empty:
     with tab1:
-        st.code('''vendas_por_periodo = (df_filtrado.groupby(['Car_id', 'Month_Year']).size().reset_index(name='Total Vendas'))
-        vendas_por_periodo = vendas_por_periodo.sort_values(['Car_id','Month_Year'])
-        df_pivot_vendas = vendas_por_periodo.pivot(index='Car_id',
-                                                   columns='Month_Year',
-                                                   values='Total Vendas')
-        st.line_chart(df_pivot_vendas)''')
+        st.write('Nada aqui ainda...')
     with tab2:
         col_t1, col_t2 = st.columns(2)
         with col_t1:
