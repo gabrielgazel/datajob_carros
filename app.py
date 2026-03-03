@@ -134,3 +134,18 @@ if not df_filtrado.empty:
             orientation='h',
         ))
         fig
+    
+    with tab4:
+        st.subheader("Distribuição de vendas por preço")
+        eixo_preço = df_filtrado['Price ($)']
+
+        fig = go.Figure()
+        fig.add_trace(go.Histogram(
+            x=eixo_preço,
+        ))
+        fig.update_layout(
+            xaxis_title_text='Valor da venda',
+            yaxis_title_text='Quantidade',
+            bargap=.2
+        )
+        fig
