@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 import plotly.graph_objects as go
 
 st.set_page_config(
@@ -91,7 +92,45 @@ colors=['red', 'blue']
 
 if not df_filtrado.empty:
     with tab1:
-        st.write('Nada aqui ainda...')
+        df_timeline_vendas = (df_filtrado.groupby(['Year', 'Month_Year']).size().reset_index(name='Vendas').sort_values(['Year', 'Month_Year']))
+        meses_nome = {
+        1: "Jan", 2: "Fev", 3: "Mar", 4: "Abr",
+        5: "Mai", 6: "Jun", 7: "Jul", 8: "Ago",
+        9: "Set", 10: "Out", 11: "Nov", 12: "Dez"
+    }
+        df_timeline_vendas["Mês"] = df_timeline_vendas["Month_Year"].map(meses_nome) + "/" + df_timeline_vendas["Year"].astype(str)
+        fig = px.line(
+        df_timeline_vendas,
+        x="Mês",
+        y="Vendas",
+        color="Year",
+        markers=True,
+        labels={"Vendas": "Quantidade de Vendas", "Mês": "Mês"},
+        color_discrete_sequence=px.colors.qualitative.Bold
+    )
+
+    fig.update_layout(
+        plot_bgcolor="#1a1d27",
+        paper_bgcolor="#1a1d27",
+        font=dict(color="#f0f0f0", family="Inter"),
+        legend_title_text="Ano",
+        xaxis=dict(
+            showgrid=False,
+            tickangle=-45,
+            tickfont=dict(size=11)
+        ),
+        yaxis=dict(
+            gridcolor="#2a2d3a",
+            tickfont=dict(size=11)
+        ),
+        hovermode="x unified",
+        margin=dict(t=20, b=60)
+    )
+
+    fig.update_traces(line=dict(width=2.5), marker=dict(size=6))
+
+    st.plotly_chart(fig, use_container_width=True)
+
     with tab2:
         col_t1, col_t2 = st.columns(2)
         with col_t1:
@@ -148,4 +187,3 @@ if not df_filtrado.empty:
             yaxis_title_text='Quantidade',
             bargap=.2
         )
-        fig
