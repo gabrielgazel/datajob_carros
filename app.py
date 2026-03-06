@@ -109,27 +109,24 @@ if not df_filtrado.empty:
         color_discrete_sequence=px.colors.qualitative.Bold
     )
 
-    fig.update_layout(
-        plot_bgcolor="#1a1d27",
-        paper_bgcolor="#1a1d27",
-        font=dict(color="#f0f0f0", family="Inter"),
-        legend_title_text="Ano",
-        xaxis=dict(
-            showgrid=False,
-            tickangle=-45,
-            tickfont=dict(size=11)
-        ),
-        yaxis=dict(
-            gridcolor="#2a2d3a",
-            tickfont=dict(size=11)
-        ),
-        hovermode="x unified",
-        margin=dict(t=20, b=60)
+        fig.update_layout(
+            font=dict(color="#f0f0f0", family="Inter"),
+            legend_title_text="Ano",
+            xaxis=dict(
+                showgrid=False,
+                tickangle=-45,
+                tickfont=dict(size=11)
+            ),
+            yaxis=dict(
+                tickfont=dict(size=11)
+            ),
+            hovermode="x unified",
+            margin=dict(t=20, b=60)
     )
 
-    fig.update_traces(line=dict(width=2.5), marker=dict(size=6))
+        fig.update_traces(line=dict(width=2.5), marker=dict(size=6))
 
-    st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
         col_t1, col_t2 = st.columns(2)
@@ -142,7 +139,7 @@ if not df_filtrado.empty:
                          y='Total',
                          horizontal=True,
                          sort='-Total',
-                         color='Total')
+                         color='primary')
             
         with col_t2:
             st.subheader("% Market share")
@@ -151,7 +148,7 @@ if not df_filtrado.empty:
                 labels=ranking_companys['Company'],
                 values=ranking_companys['Total']
             ))
-            fig
+            st.plotly_chart(fig, use_container_width=True)
     
         st.subheader("Top 10 modelos mais vendidos")
         df_top_modelos = (df_filtrado.groupby(['Model', 'Company'], as_index=False).agg(Vendas=('Car_id', 'count'),
@@ -171,8 +168,9 @@ if not df_filtrado.empty:
             y=top_region['Region'],
             x=top_region['Vendas'],
             orientation='h',
+            marker_color="#381932"
         ))
-        fig
+        st.plotly_chart(fig, use_container_width=True)
     
     with tab4:
         st.subheader("Distribuição de vendas por preço")
@@ -181,9 +179,11 @@ if not df_filtrado.empty:
         fig = go.Figure()
         fig.add_trace(go.Histogram(
             x=eixo_preço,
+            marker_color="#381932"
         ))
         fig.update_layout(
             xaxis_title_text='Valor da venda',
             yaxis_title_text='Quantidade',
             bargap=.2
         )
+        st.plotly_chart(fig, use_container_width=True)
