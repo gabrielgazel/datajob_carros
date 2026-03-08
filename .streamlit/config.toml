@@ -1,0 +1,9 @@
+[theme]
+base="light"
+headingFont="Bebas Neue:https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+font="Space Grotesk:https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap"
+baseRadius="full"
+primaryColor="#ED1C24"
+
+[theme.sidebar]
+primaryColor="#222222"
